@@ -241,6 +241,12 @@ class Dataset(object):
                 best_anchor = int(best_anchor_ind % self.anchor_per_scale)
                 xind, yind = np.floor(bbox_xywh_scaled[best_detect, 0:2]).astype(np.int32)
 
+                xind,yind = abs(xind),abs(yind)
+                if yind >= label[best_detect].shape[1]:
+                    yind = label[best_detect].shape[1] - 1
+                if xind >= label[best_detect].shape[0]:
+                    xind = label[best_detect].shape[0] -1
+
                 label[best_detect][yind, xind, best_anchor, :] = 0
                 label[best_detect][yind, xind, best_anchor, 0:4] = bbox_xywh
                 label[best_detect][yind, xind, best_anchor, 4:5] = 1.0
